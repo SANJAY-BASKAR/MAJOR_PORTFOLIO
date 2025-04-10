@@ -13,6 +13,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {toast} from "sonner";
 import FormField from "@/components/FormField";
+import {useRouter} from "next/navigation";
 //
 // const formSchema = z.object({
 //     username: z.string().min(2).max(50),
@@ -27,7 +28,7 @@ const authFormSchema = (type : FormType) => {
 }
 
 const Authform = ({type }: { type: FormType}) => {
-
+    const router = useRouter();
     const formSchema = authFormSchema(type);
 
     function onSubmit(values: z.infer<typeof formSchema>) {
@@ -35,9 +36,11 @@ const Authform = ({type }: { type: FormType}) => {
         // ✅ This will be type-safe and validated.
         try{
             if(type === 'sign-up'){
-                console.log('Sign-up', values);
+                toast.success('Account created successfully.Please Sign in!');
+                router.push('/sign-in');
             }else{
-                console.log('Sign in', values);
+                toast.success('Sign in successfully.');
+                router.push('/');
             }
         }catch(error){
             console.log(error);
@@ -72,14 +75,14 @@ const Authform = ({type }: { type: FormType}) => {
                         <FormField control={form.control} name="name" label="name" placeholder="Your Name"/>
                     )}
                     <FormField control={form.control} name="email" label="email" placeholder="Your mail"/>
-                    <FormField control={form.control} name="passkey" label="passkey" placeholder="Your passkey"/>
+                    <FormField control={form.control} name="password" label="password" placeholder="Your pass key" type="password" />
 
                     <Button className="btn" type="submit">{isSignIn ? 'Sign in' : 'Create an account'}</Button>
                 </form>
             </Form>
             <p className="text-center">{isSignIn ? 'No account yet': 'Have an account yet'}
                 <Link href={!isSignIn ? '/sign-in' : '/sign-up'} className="font-bold text-user-primary ml-1">
-                    {!isSignIn ? 'Sign in' : 'Sign in'}
+                    {!isSignIn ? '  Sign in' : 'Sign in'}
                 </Link>
             </p>
         </div>
